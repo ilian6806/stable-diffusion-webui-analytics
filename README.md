@@ -39,3 +39,6 @@ Firebase Console (https://console.firebase.google.com/) and sign in with your Go
       "measurementId": "MEASUREMENT_ID"
     }
     ```
+
+## **2. Second URL**
+You can have second URL to send event data to. You can set it in the extension settings.
