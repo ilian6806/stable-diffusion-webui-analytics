@@ -4,7 +4,7 @@ sdatx = window.sdatx;
 
 sdatx.core = (function () {
 
-    const dependencies = [
+    const DEPENDENCIES = [
         'https://accounts.google.com/gsi/client',
         'https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js',
         'https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js',
@@ -12,9 +12,31 @@ sdatx.core = (function () {
     ];
 
     async function loadDependencies() {
-        for (const src of dependencies) {
+        for (const src of DEPENDENCIES) {
             await sdatx.utils.loadScript(src);
         }
+    }
+
+    function bindEvents() {
+        ['txt2img', 'img2img'].forEach(type => {
+            const element = document.querySelector(`#${type}_generate`);
+            if (! element) {
+                console.error(`[SD Analytics]: Element not found for selector: #${type}_generate`);
+                return;
+            }
+            element.addEventListener('click', () => {
+                let data = {};
+                const promptElement = document.querySelector(`#${type}_prompt textarea`);
+                if (promptElement) {
+                    data.prompt = promptElement.value;
+                }
+                const negativePromptElement = document.querySelector(`#${type}_neg_prompt textarea`);
+                if (negativePromptElement) {
+                    data.negative_prompt = negativePromptElement.value;
+                }
+                sdatx.firebase.logEvent(`${type}_generate`, data);
+            });
+        });
     }
 
     function loadConfig() {
@@ -62,6 +84,8 @@ sdatx.core = (function () {
         await loadDependencies();
         sdatx.firebase.init(config);
         sdatx.auth.login(config);
+
+        bindEvents();
     }
 
     return { init };

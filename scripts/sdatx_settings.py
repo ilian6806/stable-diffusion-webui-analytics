@@ -11,4 +11,10 @@ def on_ui_settings():
 
     shared.opts.add_option("sd_analytics_firebase_config", shared.OptionInfo("", "Firebase Config", section=section))
 
+    shared.opts.add_option("sd_analytics_second_url", shared.OptionInfo(
+        "",
+        "Second URL",
+        section=section
+    ).info("Second URL to send analytics events data. Leave blank to use only Firebase."))
+
 scripts.script_callbacks.on_ui_settings(on_ui_settings)

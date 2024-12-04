@@ -29,11 +29,26 @@ sdatx.firebase = {
         });
 
         this.logEvent = (name, params) => {
+
             let eventParams = params || {};
             if (sessionStorage.getItem('user')) {
                 eventParams.user = JSON.parse(sessionStorage.getItem('user')).email.split('@')[0];
             }
+
             this.analytics.logEvent(this.analytics, 'evt_' + name, eventParams);
+
+            let internalStatsData = JSON.parse(JSON.stringify(eventParams));
+            internalStatsData.type = name;
+
+            if (config.sd_analytics_second_url && config.sd_analytics_second_url.trim() !== '') {
+                fetch(config.sd_analytics_second_url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(internalStatsData)
+                });
+            }
         };
     },
 
