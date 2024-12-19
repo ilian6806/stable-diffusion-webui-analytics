@@ -35,6 +35,8 @@ sdatx.firebase = {
                 eventParams.user = JSON.parse(sessionStorage.getItem('user')).email.split('@')[0];
             }
 
+            eventParams.host = window.location.host;
+
             this.analytics.logEvent(this.analytics, 'evt_' + name, eventParams);
 
             let internalStatsData = JSON.parse(JSON.stringify(eventParams));
